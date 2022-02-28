@@ -7,7 +7,6 @@
 #include <boost/asio/detached.hpp>
 #include <boost/asio/experimental/as_tuple.hpp>
 #include <boost/asio/ip/tcp.hpp>
-#include <boost/asio/strand.hpp>
 #include <boost/asio/use_awaitable.hpp>
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
