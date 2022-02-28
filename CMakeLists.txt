@@ -18,6 +18,13 @@ set(TARGET_NAME            ${PROJECT_NAME})
 set(INCLUDE_DIR            "include/${PROJECT_NAME}")
 
 ###
+### LIBRARIES
+###
+find_package(Threads REQUIRED)
+find_package(Boost 1.78 REQUIRED)
+add_subdirectory(fmt)
+
+###
 ### BUILD
 ###
 add_executable(${TARGET_NAME}
@@ -25,12 +32,7 @@ add_executable(${TARGET_NAME}
         server.cpp
         server.hpp)
 
-###
-### LIBRARIES
-###
-find_package(Boost 1.78 REQUIRED)
-add_subdirectory(fmt)
-
 target_link_libraries(${TARGET_NAME} PRIVATE
+        Threads::Threads
         Boost::headers
         fmt::fmt)
