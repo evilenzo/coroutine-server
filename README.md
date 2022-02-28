@@ -5,7 +5,7 @@
 ```
 ### Example
 ``` console
-# coroutine-server 127.0.0.1 80 1
+# coroutine-server 127.0.0.1 80 1 &
 $ curl -X GET 127.0.0.1 -d "hello"
 hello
 ```
