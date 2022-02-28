@@ -33,17 +33,17 @@ void Server::StartPolling() {
 auto Server::poll_connections(context_t& ioc) -> awaitable_t<void> {
   tcp::endpoint endpoint{m_address, m_port};
 
-  tcp::acceptor acceptor{net::make_strand(ioc)};
+  tcp::acceptor acceptor{ioc};
   acceptor.open(endpoint.protocol());
   acceptor.bind(endpoint);
   acceptor.listen();
 
-  tcp::socket socket{net::make_strand(ioc)};
+  tcp::socket socket{ioc};
 
   for (;;) {
     co_await acceptor.async_accept(socket, net::use_awaitable);
     co_await poll_socket(std::move(socket));
-    socket = tcp::socket(net::make_strand(ioc));
+    socket = tcp::socket(ioc);
   }
 }
 
