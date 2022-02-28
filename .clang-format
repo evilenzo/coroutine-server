@@ -1,0 +1,13 @@
+BasedOnStyle: Google
+
+ColumnLimit: '80'
+MaxEmptyLinesToKeep: '4'
+UseTab: Never
+
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+
+IncludeBlocks: Preserve
+SortIncludes: CaseSensitive
+
+ShortNamespaceLines: 2
