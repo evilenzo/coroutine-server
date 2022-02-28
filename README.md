@@ -1,5 +1,5 @@
 # coroutine-server
-### Boost::Beast simple echo server written with C++20 coroutines
+### Boost::Beast small echo server written with C++20 coroutines
 ```
 Usage: coroutine-server <address> <port> <threads>
 Example:
