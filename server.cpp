@@ -76,10 +76,19 @@ auto Server::poll_socket(socket_t socket) -> awaitable_t<void> {
 
 auto Server::handle_request(stream_t& stream, request_t<string_body_t> request)
     -> awaitable_t<void> {
-  http::response<http::string_body> response{http::status::ok,
-                                             request.version()};
+  http::response<http::string_body> response;
   response.set(http::field::version, BOOST_BEAST_VERSION_STRING);
-  response.body() = request.body();
+
+  switch (request.method()) {
+    case http::verb::get: {
+      response.result(http::status::ok);
+      response.body() = request.body();
+      break;
+    }
+    default:
+      response.result(http::status::bad_request);
+  }
+
   response.prepare_payload();
   co_await http::async_write(stream, response, net::use_awaitable);
 }
