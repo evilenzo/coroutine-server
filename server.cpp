@@ -3,7 +3,6 @@
 namespace beast = boost::beast;
 namespace http = beast::http;
 
-
 namespace net {
 using namespace boost::asio;
 using boost::asio::experimental::as_tuple;
