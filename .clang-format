@@ -11,3 +11,4 @@ IncludeBlocks: Preserve
 SortIncludes: CaseSensitive
 
 ShortNamespaceLines: 2
+SortUsingDeclarations: true
