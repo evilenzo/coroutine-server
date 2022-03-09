@@ -28,9 +28,7 @@ add_subdirectory(fmt)
 ### BUILD
 ###
 add_executable(${TARGET_NAME}
-        main.cpp
-        server.cpp
-        server.hpp)
+        main.cpp)
 
 target_link_libraries(${TARGET_NAME} PRIVATE
         Threads::Threads
