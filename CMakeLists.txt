@@ -21,7 +21,7 @@ set(INCLUDE_DIR            "include/${PROJECT_NAME}")
 ### LIBRARIES
 ###
 find_package(Threads REQUIRED)
-find_package(Boost 1.78 REQUIRED)
+find_package(Boost 1.78 COMPONENTS system REQUIRED)
 add_subdirectory(fmt)
 
 ###
@@ -34,5 +34,5 @@ add_executable(${TARGET_NAME}
 
 target_link_libraries(${TARGET_NAME} PRIVATE
         Threads::Threads
-        Boost::headers
+        Boost::system
         fmt::fmt)
