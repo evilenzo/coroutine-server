@@ -15,18 +15,18 @@
 
 namespace beast = boost::beast;
 
-namespace net {
+namespace asio {
 using namespace boost::asio;
 using boost::asio::experimental::as_tuple;
 }
 
-namespace ip = net::ip;
+namespace ip = asio::ip;
 using tcp = ip::tcp;
 namespace http = beast::http;
 
 
 template <http::status Code, typename Body = http::empty_body>
-net::awaitable<void> respond(beast::tcp_stream& stream, auto... Args) {
+asio::awaitable<void> respond(beast::tcp_stream& stream, auto... Args) {
   http::response<Body> response;
 
   response.result(Code);
@@ -35,11 +35,11 @@ net::awaitable<void> respond(beast::tcp_stream& stream, auto... Args) {
   }
   response.prepare_payload();
 
-  co_await http::async_write(stream, response, net::use_awaitable);
+  co_await http::async_write(stream, response, asio::use_awaitable);
 }
 
-net::awaitable<void> handle_request(beast::tcp_stream& stream,
-                                    http::request<http::string_body> request) {
+asio::awaitable<void> handle_request(beast::tcp_stream& stream,
+                                     http::request<http::string_body> request) {
   if (request.method() == http::verb::get) {
     co_return co_await respond<http::status::ok, http::string_body>(
         stream, request.body());
@@ -48,14 +48,14 @@ net::awaitable<void> handle_request(beast::tcp_stream& stream,
   co_await respond<http::status::bad_request>(stream);
 }
 
-net::awaitable<void> poll_socket(tcp::socket socket) {
+asio::awaitable<void> poll_socket(tcp::socket socket) {
   http::request<http::string_body> request;
   beast::tcp_stream stream{std::move(socket)};
   beast::flat_buffer buffer;
 
   for (;;) {
     auto [ec, size] = co_await http::async_read(
-        stream, buffer, request, net::as_tuple(net::use_awaitable));
+        stream, buffer, request, asio::as_tuple(asio::use_awaitable));
     if (ec) {
       if (ec == http::error::end_of_stream) {
         break;
@@ -78,8 +78,8 @@ net::awaitable<void> poll_socket(tcp::socket socket) {
   stream.socket().shutdown(tcp::socket::shutdown_send);
 }
 
-net::awaitable<void> poll_connections(net::ip::address address, ushort port,
-                                      net::io_context& ioc) {
+asio::awaitable<void> poll_connections(asio::ip::address address, ushort port,
+                                       asio::io_context& ioc) {
   tcp::endpoint endpoint{address, port};
 
   tcp::acceptor acceptor{ioc};
@@ -90,7 +90,7 @@ net::awaitable<void> poll_connections(net::ip::address address, ushort port,
   tcp::socket socket{ioc};
 
   for (;;) {
-    co_await acceptor.async_accept(socket, net::use_awaitable);
+    co_await acceptor.async_accept(socket, asio::use_awaitable);
     co_await poll_socket(std::move(socket));
     socket = tcp::socket(ioc);
   }
@@ -98,10 +98,10 @@ net::awaitable<void> poll_connections(net::ip::address address, ushort port,
 
 void start_polling(std::string_view address, ushort port,
                    int concurrency_hint) {
-  net::io_context ioc{concurrency_hint};
-  net::co_spawn(ioc.get_executor(),
-                poll_connections(ip::make_address(address), port, ioc),
-                net::detached);
+  asio::io_context ioc{concurrency_hint};
+  asio::co_spawn(ioc.get_executor(),
+                 poll_connections(ip::make_address(address), port, ioc),
+                 asio::detached);
 
   // Run the I/O service on the requested number of threads
   std::vector<std::thread> v;
