@@ -1,5 +1,5 @@
 # coroutine-server
-> Boost.Beast echo server example written with C++20 standard stackless coroutines
+> Boost.Beast HTTP echo server example based on C++20 stackless coroutines
 ``` console
 $ coroutine-server <address> <port> <threads>
 ```
