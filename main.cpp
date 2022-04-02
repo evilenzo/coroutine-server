@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief This file contains complete example of Boost::Beast HTTP
+ * @brief This file contains complete example of Boost.Beast HTTP
  * server based on C++ stackless coroutines
  */
 
